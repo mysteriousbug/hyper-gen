@@ -89,20 +89,3 @@ with col2:
     }
     st.bar_chart(pd.DataFrame(perf_data).set_index("Model"))
 
-# Add model architecture diagrams
-st.header("Model Architectures")
-arch_col1, arch_col2, arch_col3 = st.columns(3)
-
-with arch_col1:
-    st.image("https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformer_arch.png", 
-             caption="TransCoder: Seq2Seq with Attention")
-
-with arch_col2:
-    st.image("https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/t5_architecture.png", 
-             caption="CodeT5: Transformer Encoder-Decoder")
-
-with arch_col3:
-    st.image("https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/bert_architecture.png", 
-             caption="CodeBERT: BERT Architecture")
-
-# Run with: streamlit run app.py
