@@ -65,21 +65,22 @@ col1, col2, col3 = st.columns([5, 1, 5])
 
 # Left card - Source
 with col1:
-    with st.container():
-        st.markdown("<div class='card-container'>", unsafe_allow_html=True)
-        
-        # Card content
-        st.subheader("Source Code")
-        source_lang = st.selectbox("Select source language:", ["Python", "Java", "C++"], key="source_lang")
-        
-        uploaded_file = st.file_uploader("Upload source file", type=["txt", "py", "java", "cpp"], key="source_uploader")
-        
-        if uploaded_file is not None:
-            st.session_state.source_file = uploaded_file.getvalue().decode("utf-8")
-            st.code(st.session_state.source_file, language=source_lang.lower())
-        
-        st.markdown("</div>", unsafe_allow_html=True)
-
+    # Start card container with all content inside
+    st.markdown("""
+    <div class='card-container'>
+        <h2>Source Code</h2>
+    """, unsafe_allow_html=True)
+    
+    # Card content - all Streamlit elements will flow into the div
+    source_lang = st.selectbox("Select source language:", ["Python", "Java", "C++"], key="source_lang")
+    uploaded_file = st.file_uploader("Upload source file", type=["txt", "py", "java", "cpp"], key="source_uploader")
+    
+    if uploaded_file is not None:
+        st.session_state.source_file = uploaded_file.getvalue().decode("utf-8")
+        st.code(st.session_state.source_file, language=source_lang.lower())
+    
+    # Close the card container
+    st.markdown("</div>", unsafe_allow_html=True)
 # Middle column with translate button
 with col2:
     st.markdown("<div class='translate-btn'>", unsafe_allow_html=True)
