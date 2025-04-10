@@ -10,7 +10,7 @@ col1, col2 = st.columns([1, 4])
 with col1:
     # Load your logo image (replace 'image.png' with your actual image file)
     try:
-        logo = Image.open('image.png')
+        logo = Image.open('logo.jpeg')
         st.image(logo, width=100)
     except:
         st.warning("Logo image not found")
@@ -26,6 +26,7 @@ st.markdown("""
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 10px;
+    width: 500px;
     background-color: #f9f9f9;
 }
 .centered {
