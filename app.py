@@ -1,19 +1,11 @@
 import streamlit as st
 
 # Configure page
-st.set_page_config(page_title="CodeT5: Live Translation", layout="wide")
-st.title("Code Translator")
+st.set_page_config(page_title="Python to Java Translator", layout="wide")
+st.title("Python to Java Code Translator")
 
-# Language options
-LANGUAGES = {
-    "Python": "python",
-    "Java": "java",
-    "C++": "cpp",
-    "JavaScript": "javascript"
-}
-
-# Your Java code
-JAVA_CODE = """import java.util.concurrent.*;
+# Your Java threading implementation
+JAVA_OUTPUT_CODE = """import java.util.concurrent.*;
 import java.util.Random;
 
 public class MultiThreadingExample {
@@ -116,53 +108,79 @@ public class MultiThreadingExample {
     }
 }"""
 
+# Default Python example
+PYTHON_EXAMPLE = """import threading
+import time
+import random
+from queue import Queue
+
+# Worker function
+def worker(worker_id, task_queue, print_lock):
+    while True:
+        task = task_queue.get()
+        if task is None:
+            break
+            
+        with print_lock:
+            print(f"Worker {worker_id} processing task {task}")
+        time.sleep(random.uniform(0.5, 1.5))
+        with print_lock:
+            print(f"Worker {worker_id} completed task {task}")
+        task_queue.task_done()
+
+if __name__ == "__main__":
+    num_workers = 5
+    tasks_per_worker = 3
+    task_queue = Queue()
+    print_lock = threading.Lock()
+    
+    # Create and start workers
+    workers = []
+    for i in range(num_workers):
+        t = threading.Thread(target=worker, args=(i+1, task_queue, print_lock))
+        t.start()
+        workers.append(t)
+    
+    # Add tasks
+    for task in range(1, num_workers * tasks_per_worker + 1):
+        task_queue.put(task)
+    
+    # Wait for all tasks to complete
+    task_queue.join()
+    
+    # Stop workers
+    for _ in range(num_workers):
+        task_queue.put(None)
+    for t in workers:
+        t.join()"""
+
 # Main app layout
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Source Code")
-    source_lang = st.selectbox("From:", list(LANGUAGES.keys()))
-    
-    source_code = st.text_area(
-        "Enter your code:", 
+    st.subheader("Python Source Code")
+    python_code = st.text_area(
+        "Enter Python code:", 
         height=300,
-        placeholder=f"Enter {source_lang} code here...",
-        key="source"
+        value=PYTHON_EXAMPLE,
+        key="python_source"
     )
     
-    uploaded_file = st.file_uploader("Or upload file:", type=list(LANGUAGES.values()))
-    
+    # File upload option
+    uploaded_file = st.file_uploader("Or upload Python file:", type=["py"])
     if uploaded_file:
-        source_code = uploaded_file.getvalue().decode("utf-8")
+        python_code = uploaded_file.getvalue().decode("utf-8")
 
 with col2:
-    st.subheader("Output Code")
-    target_lang = st.selectbox("To:", list(LANGUAGES.keys()))
+    st.subheader("Java Translation")
+    st.code(JAVA_OUTPUT_CODE, language="java")
     
-    if st.button("Show Java Example"):
-        st.session_state.show_java = True
-    
-    if target_lang == "Python":
-        st.warning("Note: This is a static example. For actual translation, you'll need to implement or connect to a translation service.")
-        
-        if st.button("Download Java Example"):
-            st.download_button(
-                label="Click to confirm download",
-                data=JAVA_CODE,
-                file_name="MultiThreadingExample.java",
-                mime="text/plain",
-                key="java_download"
-            )
-        
-        st.code(JAVA_CODE, language="java")
-    else:
-        st.info("Select Python as target language to see the Java example")
+    # Download buttons
+    st.download_button(
+        label="Download Java Code",
+        data=JAVA_OUTPUT_CODE,
+        file_name="MultiThreadingExample.java",
+        mime="text/plain"
+    )
 
-st.markdown("""
-<style>
-.stCodeBlock {
-    max-height: 500px;
-    overflow-y: auto;
-}
-</style>
-""", unsafe_allow_html=True)
+st.info("Note: This is a static example showing Python to Java threading conversion. For dynamic translation, you would need to implement a translation service.")
