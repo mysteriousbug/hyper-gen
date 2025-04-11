@@ -34,7 +34,7 @@ with col1:
         else:
             st.session_state.source_file = source_code
             
-        # st.code(st.session_state.source_file, language=source_lang.lower())
+        st.code(st.session_state.source_file, language=source_lang.lower())
         
         # Translate button
         if st.button("Translate →", key="translate_btn"):
